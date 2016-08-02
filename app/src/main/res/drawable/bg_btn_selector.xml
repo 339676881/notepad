@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 按压时 -->
+    <item android:drawable="@android:drawable/stat_sys_phone_call_on_hold" android:state_pressed="true" />
+    <!-- 被选中时 -->
+    <item android:drawable="@android:drawable/stat_sys_phone_call_on_hold" android:state_selected="true" />
+    <!-- 默认时 -->
+    <item android:drawable="@android:drawable/stat_sys_phone_call_forward" />
+</selector>

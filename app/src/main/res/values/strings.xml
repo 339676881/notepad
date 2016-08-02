@@ -4,4 +4,5 @@
     <string name="action_search">Search</string>
     <string name="action_edit">Edit</string>
     <string name="action_manage_category">Edit category</string>
+    <string name="default_category">Default Category</string>
 </resources>

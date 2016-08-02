@@ -24,6 +24,18 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private LayoutInflater mLayoutInflater;
     private Context context;
     private List<NoteBean> mListNotes;
+    public boolean isSelectMode;
+
+    public List<Integer> getCheckedList()
+    {
+        return mCheckedList;
+    }
+
+    public void setCheckedList(List<Integer> mCheckedList)
+    {
+        this.mCheckedList = mCheckedList;
+    }
+
     private List<Integer> mCheckedList;
 
     //建立枚举 2个item 类型
@@ -62,6 +74,7 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         {
             ((OnlyStickViewHolder) holder).noteTime.setText(mListNotes.get(position).getNoteUpdateTime());
             ((OnlyStickViewHolder) holder).noteContext.setText(mListNotes.get(position).getNoteContext());
+            ((OnlyStickViewHolder) holder).checkBox.setTag(new Integer(position));//设置tag 否则划回来时选中消失
             if (mCheckedList != null)
             {
                 ((OnlyStickViewHolder)holder).checkBox.setChecked((mCheckedList.contains(new Integer(position)) ? true : false));
@@ -70,11 +83,19 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             {
                 ((OnlyStickViewHolder) holder).checkBox.setChecked(false);
             }
+            if (isSelectMode){
+                ((OnlyStickViewHolder) holder).checkBox.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                ((OnlyStickViewHolder) holder).checkBox.setVisibility(View.INVISIBLE);
+            }
         }
         else if (holder instanceof ImgAndStickViewHolder)
         {
             ((ImgAndStickViewHolder) holder).noteTime.setText(mListNotes.get(position).getNoteUpdateTime());
             ((ImgAndStickViewHolder) holder).noteContext.setText(mListNotes.get(position).getNoteContext());
+            ((ImgAndStickViewHolder) holder).checkBox.setTag(new Integer(position));//设置tag 否则划回来时选中消失
             if (mCheckedList != null)
             {
                 ((ImgAndStickViewHolder)holder).checkBox.setChecked((mCheckedList.contains(new Integer(position)) ? true : false));
@@ -82,6 +103,13 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             else
             {
                 ((ImgAndStickViewHolder) holder).checkBox.setChecked(false);
+            }
+            if (isSelectMode){
+                ((OnlyStickViewHolder) holder).checkBox.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                ((OnlyStickViewHolder) holder).checkBox.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -94,6 +122,14 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 {
                     int pos = holder.getLayoutPosition();
                     mOnItemClickLitener.onItemClick(holder.itemView, pos);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickLitener.onItemLongClick(v,pos);
+                    return false;
                 }
             });
         }
@@ -169,7 +205,7 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public interface OnItemClickLitener
     {
         void onItemClick(View view, int position);
-
+        void onItemLongClick(View view, int position);
     }
 
     private OnItemClickLitener mOnItemClickLitener;
@@ -191,11 +227,21 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 {
                     if (isChecked)
                     {
-                        mCheckedList.add(new Integer(position));
+                        if (!mCheckedList.contains(((OnlyStickViewHolder)viewHolder).checkBox.getTag()))
+                        {
+                            mCheckedList.add(new Integer(position));
+                        }
                     }
                     else
                     {
-                        mCheckedList.remove(new Integer(position));
+                        if (mCheckedList.contains(((OnlyStickViewHolder)viewHolder).checkBox.getTag()))
+                        {
+                            mCheckedList.remove(new Integer(position));
+                        }
+                    }
+                    if (mOnCheckboxClickLitener != null)
+                    {
+                        mOnCheckboxClickLitener.onCheckboxClick();
                     }
                 }
             });
@@ -209,17 +255,37 @@ public class NotelistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 {
                     if (isChecked)
                     {
-                        mCheckedList.add(new Integer(position));
+                        if (!mCheckedList.contains(((ImgAndStickViewHolder)viewHolder).checkBox.getTag()))
+                        {
+                            mCheckedList.add(new Integer(position));
+                        }
+
                     }
                     else
                     {
-                        mCheckedList.remove(new Integer(position));
+                        if (mCheckedList.contains(((ImgAndStickViewHolder)viewHolder).checkBox.getTag()))
+                        {
+                            mCheckedList.remove(new Integer(position));
+                        }
+                    }
+                    if (mOnCheckboxClickLitener != null)
+                    {
+                        mOnCheckboxClickLitener.onCheckboxClick();
                     }
                 }
             });
         }
 
     }
+    public interface OnCheckboxClickListener
+    {
+        void onCheckboxClick();
+    }
+    private OnCheckboxClickListener mOnCheckboxClickLitener;
 
+    public void setOnCheckboxClickLitener(OnCheckboxClickListener mOnCheckboxClickLitener)
+    {
+        this.mOnCheckboxClickLitener = mOnCheckboxClickLitener;
+    }
 }
 

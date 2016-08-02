@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="nav_header_height">192dp</dimen>
+    <dimen name="edit_bottom_tools">44dp</dimen>
 </resources>

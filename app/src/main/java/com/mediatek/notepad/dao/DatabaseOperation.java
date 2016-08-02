@@ -3,6 +3,7 @@ package com.mediatek.notepad.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mediatek.notepad.R;
@@ -64,7 +65,14 @@ public class DatabaseOperation
     public List<NoteBean> query_all_notes()
     {
         List<NoteBean> notesList = new ArrayList<NoteBean>();
+        long beforeTime = System.currentTimeMillis();
+        Log.d("QUERY BEFORE",":"+beforeTime);
+
         Cursor cursor = db.rawQuery("select * from notes", null);
+
+        long afterTime = System.currentTimeMillis();
+        Log.d("QUERY AFTER",":"+afterTime);
+        Log.d("QUERY SHIJIAN CHA",":"+(afterTime - beforeTime)/1000.0);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
         {
             int _id = cursor.getColumnIndex("_id");

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="StatusImageButton">
+        <attr name="activated" format="reference" />
+        <attr name="defauls" format="reference" />
+        <attr name="status" format="reference|boolean" />
+    </declare-styleable>
+</resources>
